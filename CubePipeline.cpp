@@ -1,7 +1,7 @@
 #include "CubePipeline.h"
 
 CubePipeline::CubePipeline() {
-	mParams = std::make_unique<parameters>(mDefaultParams);
+	//mParams = std::make_unique<parameters>(mDefaultParams);
 }
 /**
 * Runs an iteration of the pipeline and updates outputs.
@@ -10,19 +10,19 @@ void CubePipeline::Process(cv::Mat& source0){
 	//Step HSV_Threshold0:
 	//input
 	cv::Mat hsvThresholdInput = source0;
-	double hsvThresholdHue[] = {25.899280575539564, 60.81494057724958};
+	/*double hsvThresholdHue[] = {25.899280575539564, 60.81494057724958};
 	double hsvThresholdSaturation[] = {171.98741007194246, 224.6943972835314};
-	double hsvThresholdValue[] = {188.03956834532374, 244.17657045840406};
-	hsvThreshold(hsvThresholdInput, mParams->hsvThresholdHue, mParams->hsvThresholdSaturation, mParams->hsvThresholdValue, this->hsvThresholdOutput);
+	double hsvThresholdValue[] = {188.03956834532374, 244.17657045840406};*/
+	hsvThreshold(hsvThresholdInput, mDefaultParams.hsvThresholdHue, mDefaultParams.hsvThresholdSaturation, mDefaultParams.hsvThresholdValue, this->hsvThresholdOutput);
 	//Step Find_Contours0:
 	//input
 	cv::Mat findContoursInput = hsvThresholdOutput;
 	bool findContoursExternalOnly = false;  // default Boolean
-	findContours(findContoursInput, mParams->findContoursExternalOnly, this->findContoursOutput);
+	findContours(findContoursInput, mDefaultParams.findContoursExternalOnly, this->findContoursOutput);
 	//Step Filter_Contours0:
 	//input
 	std::vector<std::vector<cv::Point> > filterContoursContours = findContoursOutput;
-	double filterContoursMinArea = 300.0;  // default Double
+	/*double filterContoursMinArea = 300.0;  // default Double
 	double filterContoursMinPerimeter = 0.0;  // default Double
 	double filterContoursMinWidth = 0;  // default Double
 	double filterContoursMaxWidth = 1000;  // default Double
@@ -32,8 +32,8 @@ void CubePipeline::Process(cv::Mat& source0){
 	double filterContoursMaxVertices = 1000000;  // default Double
 	double filterContoursMinVertices = 0;  // default Double
 	double filterContoursMinRatio = 0;  // default Double
-	double filterContoursMaxRatio = 1000;  // default Double
-	filterContours(filterContoursContours, mParams->filterContoursMinArea, mParams->filterContoursMinPerimeter, mParams->filterContoursMinWidth, mParams->filterContoursMaxWidth, mParams->filterContoursMinHeight, mParams->filterContoursMaxHeight, mParams->filterContoursSolidity, mParams->filterContoursMaxVertices, mParams->filterContoursMinVertices, mParams->filterContoursMinRatio, mParams->filterContoursMaxRatio, this->filterContoursOutput);
+	double filterContoursMaxRatio = 1000;  // default Double*/
+	filterContours(filterContoursContours, mDefaultParams.filterContoursMinArea, mDefaultParams.filterContoursMinPerimeter, mDefaultParams.filterContoursMinWidth, mDefaultParams.filterContoursMaxWidth, mDefaultParams.filterContoursMinHeight, mDefaultParams.filterContoursMaxHeight, mDefaultParams.filterContoursSolidity, mDefaultParams.filterContoursMaxVertices, mDefaultParams.filterContoursMinVertices, mDefaultParams.filterContoursMinRatio, mDefaultParams.filterContoursMaxRatio, this->filterContoursOutput);
 	//Step CV_bitwise_not0:
 	//input
 	cv::Mat cvBitwiseNotSrc1 = hsvThresholdOutput;
@@ -41,10 +41,10 @@ void CubePipeline::Process(cv::Mat& source0){
 	//Step Find_Blobs0:
 	//input
 	cv::Mat findBlobsInput = cvBitwiseNotOutput;
-	double findBlobsMinArea = 200.0;  // default Double
+	/*double findBlobsMinArea = 200.0;  // default Double
 	double findBlobsCircularity[] = {0.0, 1.0};
-	bool findBlobsDarkBlobs = true;  // default Boolean
-	findBlobs(findBlobsInput, mParams->findBlobsMinArea, mParams->findBlobsCircularity, mParams->findBlobsDarkBlobs, this->findBlobsOutput);
+	bool findBlobsDarkBlobs = true;  // default Boolean*/
+	findBlobs(findBlobsInput, mDefaultParams.findBlobsMinArea, mDefaultParams.findBlobsCircularity, mDefaultParams.findBlobsDarkBlobs, this->findBlobsOutput);
 }
 
 /**
@@ -187,6 +187,7 @@ std::vector<cv::KeyPoint>* CubePipeline::GetFindBlobsOutput(){
 	}
 	void CubePipeline::setParams(const CubePipeline::parameters& params) {
 		mParams = std::make_unique<parameters>(params);
+		//mParams = params;
 	}
 
 
