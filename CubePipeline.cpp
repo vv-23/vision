@@ -1,6 +1,7 @@
 #include "CubePipeline.h"
 
 CubePipeline::CubePipeline() {
+	mParams = std::make_unique<parameters>(mDefaultParams);
 }
 /**
 * Runs an iteration of the pipeline and updates outputs.
@@ -12,12 +13,12 @@ void CubePipeline::Process(cv::Mat& source0){
 	double hsvThresholdHue[] = {25.899280575539564, 60.81494057724958};
 	double hsvThresholdSaturation[] = {171.98741007194246, 224.6943972835314};
 	double hsvThresholdValue[] = {188.03956834532374, 244.17657045840406};
-	hsvThreshold(hsvThresholdInput, this->mDefaultParams.hsvThresholdHue, this->mDefaultParams.hsvThresholdSaturation, this->mDefaultParams.hsvThresholdValue, this->hsvThresholdOutput);
+	hsvThreshold(hsvThresholdInput, mParams->hsvThresholdHue, mParams->hsvThresholdSaturation, mParams->hsvThresholdValue, this->hsvThresholdOutput);
 	//Step Find_Contours0:
 	//input
 	cv::Mat findContoursInput = hsvThresholdOutput;
 	bool findContoursExternalOnly = false;  // default Boolean
-	findContours(findContoursInput, this->mDefaultParams.findContoursExternalOnly, this->findContoursOutput);
+	findContours(findContoursInput, mParams->findContoursExternalOnly, this->findContoursOutput);
 	//Step Filter_Contours0:
 	//input
 	std::vector<std::vector<cv::Point> > filterContoursContours = findContoursOutput;
@@ -32,7 +33,7 @@ void CubePipeline::Process(cv::Mat& source0){
 	double filterContoursMinVertices = 0;  // default Double
 	double filterContoursMinRatio = 0;  // default Double
 	double filterContoursMaxRatio = 1000;  // default Double
-	filterContours(filterContoursContours, this->mDefaultParams.filterContoursMinArea, this->mDefaultParams.filterContoursMinPerimeter, this->mDefaultParams.filterContoursMinWidth, this->mDefaultParams.filterContoursMaxWidth, this->mDefaultParams.filterContoursMinHeight, this->mDefaultParams.filterContoursMaxHeight, this->mDefaultParams.filterContoursSolidity, this->mDefaultParams.filterContoursMaxVertices, this->mDefaultParams.filterContoursMinVertices, this->mDefaultParams.filterContoursMinRatio, this->mDefaultParams.filterContoursMaxRatio, this->filterContoursOutput);
+	filterContours(filterContoursContours, mParams->filterContoursMinArea, mParams->filterContoursMinPerimeter, mParams->filterContoursMinWidth, mParams->filterContoursMaxWidth, mParams->filterContoursMinHeight, mParams->filterContoursMaxHeight, mParams->filterContoursSolidity, mParams->filterContoursMaxVertices, mParams->filterContoursMinVertices, mParams->filterContoursMinRatio, mParams->filterContoursMaxRatio, this->filterContoursOutput);
 	//Step CV_bitwise_not0:
 	//input
 	cv::Mat cvBitwiseNotSrc1 = hsvThresholdOutput;
@@ -43,7 +44,7 @@ void CubePipeline::Process(cv::Mat& source0){
 	double findBlobsMinArea = 200.0;  // default Double
 	double findBlobsCircularity[] = {0.0, 1.0};
 	bool findBlobsDarkBlobs = true;  // default Boolean
-	findBlobs(findBlobsInput, this->mDefaultParams.findBlobsMinArea, this->mDefaultParams.findBlobsCircularity, this->mDefaultParams.findBlobsDarkBlobs, this->findBlobsOutput);
+	findBlobs(findBlobsInput, mParams->findBlobsMinArea, mParams->findBlobsCircularity, mParams->findBlobsDarkBlobs, this->findBlobsOutput);
 }
 
 /**
@@ -183,6 +184,9 @@ std::vector<cv::KeyPoint>* CubePipeline::GetFindBlobsOutput(){
 		params.filterByInertia = false;
 		cv::Ptr<cv::SimpleBlobDetector> detector = cv::SimpleBlobDetector::create(params);
 		detector->detect(input, blobList);
+	}
+	void CubePipeline::setParams(const CubePipeline::parameters& params) {
+		mParams = std::make_unique<parameters>(params);
 	}
 
 

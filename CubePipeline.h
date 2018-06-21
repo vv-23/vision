@@ -6,8 +6,9 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/features2d.hpp>
 #include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
+#include <memory>
+//#include <stdio.h>
+//#include <stdlib.h>
 #include <map>
 #include <vector>
 #include <string>
@@ -71,11 +72,11 @@ class CubePipeline {
 			{0.0, 1.0},
 			true
 		};
-		parameters* mParams;
+		std::unique_ptr<parameters> mParams;
 
 	public:
 		CubePipeline();
-		void setParams(parameters*);
+		void setParams(const parameters& params);
 		void Process(cv::Mat& source0);
 		cv::Mat* GetHsvThresholdOutput();
 		std::vector<std::vector<cv::Point> >* GetFindContoursOutput();

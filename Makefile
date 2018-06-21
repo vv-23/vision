@@ -1,9 +1,9 @@
 LIBS =  `pkg-config --libs opencv`
 CFLAGS = `pkg-config --cflags opencv`
 
-all: foo
-foo: main.o CubePipeline.o objectDetect.o
-	g++ -g -o foo main.o objectDetect.o CubePipeline.o $(LIBS) $(CFLAGS)
+all: foo.e
+foo.e: main.o CubePipeline.o objectDetect.o
+	g++ -g -o foo.e main.o objectDetect.o CubePipeline.o $(LIBS) $(CFLAGS)
 main.o: main.cpp
 	g++ -g -c main.cpp $(LIBS) $(CFLAGS)
 CubePipeline.o: CubePipeline.cpp
