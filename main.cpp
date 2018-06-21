@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
     char key;
     while (1) {
       cv::VideoCapture capture(video_file);
-      while(capture.get(CV_CAP_PROP_POS_FRAMES)<capture.get(CV_CAP_PROP_FRAME_COUNT)-1) {
+      while(capture.get(1/*CAP_PROP_POS_FRAMES*/)<capture.get(7/*CAP_PROP_FRAME_COUNT*/)-1) {
         //we can loop the video by re-opening the capture every time the video reaches its last frame
 
         if (!capture.isOpened()) {
