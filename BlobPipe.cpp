@@ -4,7 +4,7 @@
 namespace VisionPipeline {
 	namespace CubePipeline {
 		BlobPipe::BlobPipe() {
-			//Init defaults
+			//Use default params
 			currentParams_ = std::make_shared<BlobPipe::parameters>(defaultParams_);
 		}
 		BlobPipe::BlobPipe(const BlobPipe::parameters& p) {
@@ -82,6 +82,8 @@ namespace VisionPipeline {
 			cv::Ptr<cv::SimpleBlobDetector> detector = cv::SimpleBlobDetector::create(params);
 			detector->detect(input, blobList);
 		}
+
+		//Select biggest blob
 		cv::Point BlobPipe::getTarget() {
 			cv::KeyPoint target(cv::Point(0,0), 0);
 			for(auto i = findBlobsOutput.begin(); i!=findBlobsOutput.end(); i++) {
@@ -89,6 +91,8 @@ namespace VisionPipeline {
 			};
 			return target.pt;
 		};
+
+		//Set the params pointer
 		void BlobPipe::setParams(const BlobPipe::parameters& p) {
 			currentParams_ = std::make_shared<BlobPipe::parameters>(p);
 		}

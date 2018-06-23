@@ -8,7 +8,7 @@ namespace VisionPipeline
         virtual cv::Point getTarget() = 0;
     };
     namespace CubePipeline
-    {
+    {   
         class BlobPipe : public VisionPipeline::Pipeline {
             public:
                 struct parameters {
