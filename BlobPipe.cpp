@@ -5,7 +5,10 @@ namespace VisionPipeline {
 	namespace CubePipeline {
 		BlobPipe::BlobPipe() {
 			//Init defaults
-			currentParams_ = defaultParams_;
+			currentParams_ = std::make_shared<BlobPipe::parameters>(defaultParams_);
+		}
+		BlobPipe::BlobPipe(const BlobPipe::parameters& p) {
+			setParams(p);
 		}
 		/**
 		* Runs an iteration of the pipeline and updates outputs.
@@ -48,6 +51,7 @@ namespace VisionPipeline {
 		void BlobPipe::hsvThreshold(cv::Mat &input, double hue[], double sat[], double val[], cv::Mat &out) {
 			cv::cvtColor(input, out, cv::COLOR_BGR2HSV);
 			cv::inRange(out,cv::Scalar(hue[0], sat[0], val[0]), cv::Scalar(hue[1], sat[1], val[1]), out);
+			cv::imshow("HSV", out);
 		}
 
 		/**
@@ -85,6 +89,9 @@ namespace VisionPipeline {
 			};
 			return target.pt;
 		};
+		void BlobPipe::setParams(const BlobPipe::parameters& p) {
+			currentParams_ = std::make_shared<BlobPipe::parameters>(p);
+		}
 	}
 } // end grip namespace
 

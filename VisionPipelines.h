@@ -1,4 +1,5 @@
 #include <opencv2/opencv.hpp>
+#include <memory>
 namespace VisionPipeline
 {
     class Pipeline {
@@ -9,7 +10,7 @@ namespace VisionPipeline
     namespace CubePipeline
     {
         class BlobPipe : public VisionPipeline::Pipeline {
-            private:
+            public:
                 struct parameters {
                     double hsvThresholdHue[2];
                     double hsvThresholdSaturation[2];
@@ -18,6 +19,14 @@ namespace VisionPipeline
                     double findBlobsCircularity[2];
                     bool findBlobsDarkBlobs;
                 };
+                BlobPipe();
+                BlobPipe(const parameters&p);
+                void Process(cv::Mat& source0);
+                cv::Mat* GetHsvThresholdOutput();
+                std::vector<cv::KeyPoint>* GetFindBlobsOutput();
+                cv::Point getTarget();
+                void setParams(const parameters& p);
+            private:
                 cv::Mat hsvThresholdOutput;
                 std::vector<cv::KeyPoint> findBlobsOutput;
                 void hsvThreshold(cv::Mat &, double [], double [], double [], cv::Mat &);
@@ -30,13 +39,7 @@ namespace VisionPipeline
                     {0.0, 1.0},
                     false  // default Boolean
                 };
-                parameters currentParams_;
-            public:
-                BlobPipe();
-                void Process(cv::Mat& source0);
-                cv::Mat* GetHsvThresholdOutput();
-                std::vector<cv::KeyPoint>* GetFindBlobsOutput();
-                cv::Point getTarget();
+                std::shared_ptr<parameters> currentParams_;
         };
     }
 }
